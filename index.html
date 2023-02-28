@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,6 +8,24 @@
   <body>
     <!-- Replace the <div> below -->
     <div id="viewDiv"></div>
+
+    <!-- Calcite -->
+    <calcite-panel id="prefcontrolsDiv" class="prefControl">
+        <br />
+        <calcite-label><b>都道府県ナビ</b></calcite-label>
+        <calcite-select id="prefSelect">
+            <calcite-option-group label="関東地方">
+                <calcite-option value="08">茨城県</calcite-option>
+                <calcite-option value="09">栃木県</calcite-option>
+                <calcite-option value="10">群馬県</calcite-option>
+                <calcite-option value="11">埼玉県</calcite-option>
+                <calcite-option value="12">千葉県</calcite-option>
+                <calcite-option value="13">東京都</calcite-option>
+                <calcite-option value="14">神奈川県</calcite-option>
+            </calcite-option-group>
+        </calcite-select>
+    </calcite-panel>
+
     <script type="module" src="/main.js"></script>
   </body>
 </html>

@@ -71,3 +71,13 @@ export default {
     base: './'
 }
 ```
+
+## Calcite Components を使う場合の手順
+
+Calcite Components Examples の [vite のサンプル](https://github.com/Esri/calcite-components-examples/tree/master/vite) の手順を行い、`rollup-plugin-copy` の設定後、一旦、ビルドし、public フォルダー下に assets フォルダーが作成されていることを確認します。  
+
+```
+npm run build
+```
+
+ビルド後は、デバッグを開始できます。
