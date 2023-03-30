@@ -84,4 +84,4 @@ npm run build
   
 ## 都道府県ナビゲーション機能を追加した後のイメージ
   
-![intro-calcite-vite-jsapp](https://github.com/kataya/vite-jsapp/images/intro-calcite-vite-jsapp.gif?raw=true)
+![intro-calcite-vite-jsapp](https://github.com/kataya/vite-jsapp/blob/main/images/intro-calcite-vite-jsapp.gif?raw=true)
