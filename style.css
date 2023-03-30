@@ -8,11 +8,20 @@ height: 100%;
 width: 100%;
 }
 
-.prefControl {
-    padding: 5px;
-    width: 200px;
-    height: 80px;
-    position: absolute;
-    top: 10px;
-    left: 50px;
-  }
+body {
+  display: flex;
+}
+
+calcite-loader {
+  align-self: center;
+  justify-self: center;
+}
+
+#header-title {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+#prefControl {
+  padding: 0.75rem;
+}

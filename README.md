@@ -3,7 +3,7 @@
 
 フロントエンドのビルドツール、Vite（ヴィート）を使ってArcGIS Maps SDK for JavaScript でベースマップを表示する最初のアプリを試してみたソースコードです。手順は、[Vite with ArcGIS](https://odoe.net/blog/vite-jsapi) に習って行っていました。  
 
-## 自分でアプリケーションを作成する場合の手順
+## 自分で Vite でアプリケーションを作成する場合の手順
 
 ディレクトリを移動し、
 次のコマンドで、vite のアプリ テンプレートから選択できますが、vanilla プロジェクトをお勧めします。
@@ -72,7 +72,7 @@ export default {
 }
 ```
 
-## Calcite Components を使う場合の手順
+## Calcite Components を追加して使う場合の手順
 
 Calcite Components Examples の [vite のサンプル](https://github.com/Esri/calcite-components-examples/tree/master/vite) の手順を行い、`rollup-plugin-copy` の設定後、一旦、ビルドし、public フォルダー下に assets フォルダーが作成されていることを確認します。  
 
@@ -80,4 +80,8 @@ Calcite Components Examples の [vite のサンプル](https://github.com/Esri/c
 npm run build
 ```
 
-ビルド後は、デバッグを開始できます。
+ビルド後は、デバッグを開始できます。  
+  
+## 都道府県ナビゲーション機能を追加した後のイメージ
+  
+![intro-calcite-vite-jsapp](https://github.com/kataya/vite-jsapp/images/intro-calcite-vite-jsapp.gif?raw=true)
