@@ -1,22 +1,37 @@
  
 # vite js app
 
-フロントエンドのビルドツール、Vite（ヴィート）を使ってArcGIS Maps SDK for JavaScript でベースマップを表示する最初のアプリを試してみたソースコードです。手順は、[Vite with ArcGIS](https://odoe.net/blog/vite-jsapi) に習って行っていました。  
+フロントエンドのビルドツール、Vite（ヴィート）を使ってArcGIS Maps SDK for JavaScript でベースマップを表示する最初のアプリを試してみたソースコードです。手順は、[Vite with ArcGIS](https://odoe.net/blog/vite-jsapi) 、[Vite はじめに](https://ja.vitejs.dev/guide/) を参考にして行っています。  
+※ Vite は Node.js 14.18+、16+ のバージョンが必要です。  
 
-## 自分で Vite でアプリケーションを作成する場合の手順
+## 自分で Vite でJavaScript のアプリケーション を作成する場合の手順
 
-ディレクトリを移動し、
-次のコマンドで、vite のアプリ テンプレートから選択できますが、vanilla プロジェクトをお勧めします。
+### Vite アプリ テンプレートでのひな形作成
+Vite のアプリ テンプレート で、次のコマンドでアプリケーション
+のひな形を作成します。
 ```
-npm init @vitejs/app
-```
-
-それが完了したら、ArcGIS Maps SDK for JavaScript の、next API のバージョンをインストールします。
-```
-npm install @arcgis/core@next
+npm create @vitejs/app vite-jsapp
 ```
 
-main.js で、API を使用してMap を表示するように、ファイルを変更します。
+テンプレートからframework の選択時にはvanilla プロジェクト、variantはJavaScript を選択します。
+```
+√ Select a framework: Vanilla
+√ Select a variant: JavaScript
+```
+
+それが完了したら、画面に表示されている手順に沿ってディレクトリを移動します。
+```
+cd vite-jsapp
+```
+
+次に、ArcGIS Maps SDK for JavaScript の最新バージョンをインストールします。
+```
+npm install @arcgis/core
+```
+
+### Map アプリ用に編集
+
+**main.js** でArcGIS Maps SDK for JavaScript API を使用してMap を表示するよう、次のようにファイルを変更します（簡便に行いたい場合は、下記のコードをコピーし、全て書き換えるように貼り付けてください）。
 ```
 import Map from "@arcgis/core/Map";
 import MapView from "@arcgis/core/views/MapView";
@@ -42,7 +57,8 @@ const view = new MapView({
   center: [139.715512, 35.678257], // 皇居を中心にした周辺
 });
 ```
-style.css を更新します。
+
+同様にして、**style.css** を更新します（簡便に行いたい場合は、下記の定義をコピーし、全て書き換えるように貼り付けてください）。※以下は、API Version 4.25 の場合です。お使いのバージョンにあわせて、URLは変更してください。
 ```
 @import "https://js.arcgis.com/4.25/@arcgis/core/assets/esri/themes/light/main.css";
 html,
@@ -55,15 +71,30 @@ body,
 }
 ```
 
-vite をインストールします。
+同様にして、**index.html** を更新します（簡便に行いたい場合は、下記の定義をコピーし、全て書き換えるように貼り付けてください）。
 ```
-npm i vite
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite App</title>
+  </head>
+  <body>
+    <div id="viewDiv"></div>
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
+
 ```
 
+### Map アプリを表示
 デバッグの開始は、次のコマンドで可能です。
 ```
 npm run dev
 ```
+
+![intro-calcite-vite-jsapp](https://github.com/kataya/vite-jsapp/blob/main/images/intro-calcite-vite-jsapp.png?raw=true)
 
 なお、npm run build でデプロイ用にビルドが出来ますが、path のエラーが発生しないよう vite.config.js ファイルを追加し、次の情報を書きます。
 ```
