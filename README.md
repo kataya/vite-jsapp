@@ -94,7 +94,7 @@ body,
 npm run dev
 ```
 
-![intro-calcite-vite-jsapp](https://github.com/kataya/vite-jsapp/blob/main/images/intro-calcite-vite-jsapp.png?raw=true)
+![intro-calcite-vite-jsapp](https://github.com/kataya/vite-jsapp/blob/main/images/intro-calcite-vite-jsapp.png)
 
 なお、npm run build でデプロイ用にビルドが出来ますが、path のエラーが発生しないよう vite.config.js ファイルを追加し、次の情報を書きます。
 ```
