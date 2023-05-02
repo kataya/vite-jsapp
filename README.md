@@ -113,6 +113,6 @@ npm run build
 
 ビルド後は、デバッグを開始できます。  
   
-## 都道府県ナビゲーション機能を追加した後のイメージ
+## 都道府県/市区町村のナビゲーション機能を追加した後のイメージ
   
 ![intro-calcite-vite-jsapp](https://github.com/kataya/vite-jsapp/blob/main/images/intro-calcite-vite-jsapp.gif?raw=true)
