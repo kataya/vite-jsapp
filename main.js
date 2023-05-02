@@ -91,15 +91,16 @@ const cityRenderer = new SimpleRenderer({
 });
 
 // FeatureLayerを追加（全国市区町村界データ 2021： Living Atlas）
-const cityareaLyr = new FeatureLayer({
+const cityAreaLyr = new FeatureLayer({
     url: "https://services.arcgis.com/wlVTGRSYTzAbjjiC/arcgis/rest/services/municipalityboundaries2021/FeatureServer",
     id: "cityarea",
     opacity: 0.5,
     minScale: 5000000,
-    maxScale: 50000,
+    maxScale: 5000,
     visible: true,
     title: "全国市区町村界データ 2021",
     renderer: cityRenderer,
+    outFields: ["*"],
     // 埼玉県のみになるようフィルタ定義を追加
     definitionExpression: "JCODE LIKE '11%'"
 });
@@ -114,12 +115,18 @@ const cityPopupTemplate = new PopupTemplate({
         }
     ]
 });
-cityareaLyr.popupTemplate = cityPopupTemplate;
+cityAreaLyr.popupTemplate = cityPopupTemplate;
 
 // Mapにレイヤーを追加
-map.add(cityareaLyr);
+map.add(cityAreaLyr);
+
+// calcite-select の初期設定
+cityAreaLyr.when(() => {
+    updateCitySelect(cityAreaLyr);
+});
 
 
+//let citeareaLyrView;
 view.when(() => {
 
     // [Create a mapping app turtorial]
@@ -162,34 +169,91 @@ view.when(() => {
     document.querySelector("calcite-loader").hidden = true;
     // End - [Create a mapping app turtorial]
 
-    // pref navi
-    function zoomToLayer(layer) {
-        document.querySelector("calcite-loader").hidden = false; // loader を表示
-        return layer.queryExtent().then((response) => {
-                view.goTo(response.extent, {"duration":1000})
-                    .catch((error) => {
-                        console.error(error);
-                    })
-                    .finally(()=>{
-                        document.querySelector("calcite-loader").hidden = true; // loader を非表示
-                    });
-                });
-    }
-    
-    function createDefinitionExpression(subExpression) {
-        const chikakojiExpression = "L01_022 LIKE '" + subExpression + "%'";
-        const cityareaExpression = "JCODE LIKE '" + subExpression + "%'";
-        return {chikaExp: chikakojiExpression, cityExp:cityareaExpression}
-    }
-
-    //const pref = document.getElementById("prefSelect");
-    //pref.addEventListener("calciteSelectChange", event => {
-    document.addEventListener("calciteSelectChange", event =>{ 
+    // calcite-select を利用した都道府県/市区町村ナビ
+    document.getElementById("prefSelect").addEventListener("calciteSelectChange", event =>{ 
         let prefcode = event.target.selectedOption.value; //event.srcElement.value;
         let {chikaExp, cityExp} = createDefinitionExpression(prefcode);
-        cityareaLyr.definitionExpression = cityExp;
-        zoomToLayer(cityareaLyr);
+        cityAreaLyr.definitionExpression = cityExp;
+        zoomToLayer(cityAreaLyr);
+        updateCitySelect(cityAreaLyr);
+    });
+
+    document.getElementById("citySelect").addEventListener("calciteSelectChange", event =>{ 
+        //console.log(event.target.selectedOption.value);
+        let citycode = event.target.selectedOption.value;
+        if (citycode === "00000") { return }
+        const query = cityAreaLyr.createQuery();
+        query.where = "JCODE = " + citycode;
+        query.returnGeometry = true;
+        query.outFields = ["*"];
+        cityAreaLyr.queryFeatures(query)
+            .then((response) => {
+                view.goTo(response.features[0].geometry,  {"duration":1000})
+                    .then(() => {
+                        view.popup.open({
+                            features: [response.features[0]],
+                            location: response.features[0].geometry.centroid
+                        });
+                    });
+                
+            })
     });
 
 });
 
+// calcite-loaderを使ったレイヤーズーム
+function zoomToLayer(layer) {
+    document.querySelector("calcite-loader").hidden = false; // loader を表示
+    return layer.queryExtent().then((response) => {
+            view.goTo(response.extent, {"duration":1000})
+                .catch((error) => {
+                    console.error(error);
+                })
+                .finally(()=>{
+                    document.querySelector("calcite-loader").hidden = true; // loader を非表示
+                });
+            });
+}
+
+// definitionExpression の式を作成
+function createDefinitionExpression(subExpression) {
+    const chikakojiExpression = "L01_022 LIKE '" + subExpression + "%'";
+    const cityareaExpression = "JCODE LIKE '" + subExpression + "%'";
+    return {chikaExp: chikakojiExpression, cityExp:cityareaExpression}
+}
+
+// 市区町村の一覧をcitySelect に設定
+function updateCitySelect(featureLayer) {
+    // 前の市区町村名をクリア（子要素をすべて削除）
+    // 参考:  https://developer.mozilla.org/ja/docs/Web/API/Node/removeChild
+    const cityElem = document.getElementById("citySelect");
+    while (cityElem.firstChild) {
+        cityElem.removeChild(cityElem.firstChild);
+    }
+    // 都道府県切り替え時、前に選択した市区町村コードが残っているみたいなので
+    if (cityElem.selectedOption) {
+        cityElem.selectedOption.value = "";
+    }
+    
+    // クエリして市区町村名をcalcite-option に設定する
+    const queryParams = featureLayer.createQuery();
+    queryParams.outFields = ["*"];
+    queryParams.where = featureLayer.definitionExpression || "1=1";
+    queryParams.returnGeometry = true;
+    queryParams.orderByFields = ["JCODE"];
+    featureLayer.queryFeatures(queryParams).then((results) => {
+        const graphics = results.features;
+        const preitem = document.createElement("calcite-option");
+        preitem.setAttribute("label", "▽市区町村を選択");
+        preitem.setAttribute("value", "00000");
+        cityElem.appendChild(preitem);
+        graphics.forEach((graphic, index) => {
+            const attributes = graphic.attributes;
+            const item = document.createElement("calcite-option");
+            item.setAttribute("label", attributes.JCODE + " : " + attributes.SEIREI + attributes.SIKUCHOSON);
+            item.setAttribute("value", attributes.JCODE);
+            //document.getElementById("citySelect").appendChild(item);
+            cityElem.appendChild(item);
+        });
+    });
+}
