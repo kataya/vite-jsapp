@@ -10,7 +10,7 @@
 Vite のアプリ テンプレート で、次のコマンドでアプリケーション
 のひな形を作成します。
 ```
-npm create @vitejs/app vite-jsapp
+npm create vite@latest vite-jsapp
 ```
 
 テンプレートからframework の選択時にはvanilla プロジェクト、variantはJavaScript を選択します。
